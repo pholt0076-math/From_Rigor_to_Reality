@@ -1,39 +1,44 @@
-Scaffold the From_Rigor_to_Reality repository according to the repo instructions.
+Create the Zero-Level Measure Theory track from the outline I provide.
 
-Keep the existing HANDOFF.md in the root.
+This is not a general Zero Level track. It belongs under Measure Theory.
 
-Create a clean initial project structure, but do not add heavy content yet.
+Use the title:
 
-Create these folders:
+Before Measure Theory: The Missing Middle
+A Zero Series from Real Analysis to Measure Theory
 
-docs/
-posts/
-posts/measure_theory/
-posts/sigma_algebras/
-posts/lebesgue_integration/
-posts/differential_geometry/
-posts/tensor_calculus/
-posts/continuum_mechanics/
-notebooks/
-notebooks/measure_theory/
-notebooks/sigma_algebras/
-notebooks/visualizations/
-src/
-src/rigor_to_reality/
-assets/
-assets/images/
-assets/figures/
-handoffs/
+Create the following files:
 
-Add .gitkeep files where needed so empty folders are tracked.
+posts/measure_theory/zero_level/README.md
+posts/measure_theory/zero_level/outline.md
+posts/measure_theory/zero_level/track_status.md
+notebooks/measure_theory/zero_level/.gitkeep
 
-Create these lightweight files if they do not already exist:
+Use the provided outline as the source of truth.
 
-README.md
-ROADMAP.md
-docs/project_manifesto.md
-docs/publishing_workflow.md
-docs/backlog_merge_plan.md
+In README.md:
+- explain the purpose of the track
+- state that this is a bridge from Real Analysis into Measure Theory
+- summarize the structural arc
+- do not include all 42 entries in full
 
-Do not overwrite existing meaningful content.
+In outline.md:
+- preserve the full 42-entry outline
+- clean formatting into valid Markdown
+- format Python hooks as fenced Python code blocks
+- do not change the mathematical intent
+- do not invent new entries
+
+In track_status.md:
+- create a table with columns:
+  Number
+  Title
+  Part
+  Status
+  Python Hook
+  Notes
+- mark all entries as Planned
+- mark Python Hook as Yes or No based on the outline
+
+Do not modify unrelated files.
 Show me the diff before committing.
