@@ -1,1 +1,39 @@
-Read .github/copilot-instructions.md and summarize how you should assist in this repository. Do not modify files.
+Scaffold the From_Rigor_to_Reality repository according to the repo instructions.
+
+Keep the existing HANDOFF.md in the root.
+
+Create a clean initial project structure, but do not add heavy content yet.
+
+Create these folders:
+
+docs/
+posts/
+posts/measure_theory/
+posts/sigma_algebras/
+posts/lebesgue_integration/
+posts/differential_geometry/
+posts/tensor_calculus/
+posts/continuum_mechanics/
+notebooks/
+notebooks/measure_theory/
+notebooks/sigma_algebras/
+notebooks/visualizations/
+src/
+src/rigor_to_reality/
+assets/
+assets/images/
+assets/figures/
+handoffs/
+
+Add .gitkeep files where needed so empty folders are tracked.
+
+Create these lightweight files if they do not already exist:
+
+README.md
+ROADMAP.md
+docs/project_manifesto.md
+docs/publishing_workflow.md
+docs/backlog_merge_plan.md
+
+Do not overwrite existing meaningful content.
+Show me the diff before committing.
