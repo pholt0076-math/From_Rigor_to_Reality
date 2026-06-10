@@ -1,0 +1,467 @@
+"""
+repo_target: examples/measure_theory_zero_series/measure_theory_zero_series_python_artifacts.py
+project: From_Rigor_To_Reality
+series: Before Measure Theory: The Missing Middle
+type: python_artifacts
+status: starter_canonical_candidate
+
+Copilot Handling Instructions
+-----------------------------
+Place this file at:
+    examples/measure_theory_zero_series/measure_theory_zero_series_python_artifacts.py
+
+This file intentionally contains simple, readable Python artifacts tied to the
+42-section Measure Theory Zero Series outline.
+
+Do not optimize prematurely. Mathematical clarity is the priority.
+
+Later, this file may be split into modules under:
+    src/rigor_to_reality/sets/
+    src/rigor_to_reality/analysis/
+    src/rigor_to_reality/measure/
+"""
+
+from __future__ import annotations
+
+from fractions import Fraction
+from math import sqrt
+from typing import Any, Callable, Iterable, Sequence
+
+Predicate = Callable[[float], bool]
+NumericFunction = Callable[[float], float]
+
+
+# ---------------------------------------------------------------------------
+# Sections 2-3: Real line approximation, supremum, infimum
+# ---------------------------------------------------------------------------
+
+def rational_approximation(x: float, max_denominator: int = 100) -> Fraction:
+    """Approximate a real number by a rational number."""
+    return Fraction(x).limit_denominator(max_denominator)
+
+
+def approximate_infimum(values: Sequence[float]) -> float:
+    """Approximate an infimum over a finite list of candidate values."""
+    if not values:
+        raise ValueError("Cannot compute an infimum over an empty collection.")
+    return min(values)
+
+
+def approximate_supremum(values: Sequence[float]) -> float:
+    """Approximate a supremum over a finite list of candidate values."""
+    if not values:
+        raise ValueError("Cannot compute a supremum over an empty collection.")
+    return max(values)
+
+
+# ---------------------------------------------------------------------------
+# Sections 4-7: Sets, membership, operations, indexed families
+# ---------------------------------------------------------------------------
+
+def is_member(x: Any, set_like: set[Any]) -> bool:
+    """Check literal membership in a finite Python set."""
+    return x in set_like
+
+
+def is_member_by_predicate(x: float, set_predicate: Predicate) -> bool:
+    """Check membership in a set represented by a predicate."""
+    return bool(set_predicate(x))
+
+
+def in_interval(x: float, a: float, b: float, closed: bool = True) -> bool:
+    """Check whether x belongs to an interval."""
+    if closed:
+        return a <= x <= b
+    return a < x < b
+
+
+def is_subset_finite(A: set[Any], B: set[Any]) -> bool:
+    """Check exact subset inclusion for finite sets."""
+    return A.issubset(B)
+
+
+def approximate_subset(sample_points: Iterable[float], predicate_a: Predicate, predicate_b: Predicate) -> bool:
+    """Approximate A ⊆ B over a finite sample."""
+    return all((not predicate_a(x)) or predicate_b(x) for x in sample_points)
+
+
+def union(predicate_a: Predicate, predicate_b: Predicate) -> Predicate:
+    """Predicate-level union."""
+    return lambda x: predicate_a(x) or predicate_b(x)
+
+
+def intersection(predicate_a: Predicate, predicate_b: Predicate) -> Predicate:
+    """Predicate-level intersection."""
+    return lambda x: predicate_a(x) and predicate_b(x)
+
+
+def complement(predicate: Predicate) -> Predicate:
+    """Predicate-level complement."""
+    return lambda x: not predicate(x)
+
+
+def interval_family(n: int) -> Predicate:
+    """Return the predicate for A_n = [0, 1/n]."""
+    return lambda x: 0 <= x <= 1 / n
+
+
+def approximate_countable_union(predicates: Iterable[Predicate]) -> Predicate:
+    """Approximate a countable union by a finite list/truncation of predicates."""
+    predicate_list = list(predicates)
+    return lambda x: any(predicate(x) for predicate in predicate_list)
+
+
+def approximate_countable_intersection(predicates: Iterable[Predicate]) -> Predicate:
+    """Approximate a countable intersection by a finite list/truncation of predicates."""
+    predicate_list = list(predicates)
+    return lambda x: all(predicate(x) for predicate in predicate_list)
+
+
+# ---------------------------------------------------------------------------
+# Section 8: Images and preimages
+# ---------------------------------------------------------------------------
+
+def image(function: Callable[[Any], Any], domain: Iterable[Any]) -> set[Any]:
+    """Compute the image of a function over a finite domain."""
+    return {function(x) for x in domain}
+
+
+def preimage(function: Callable[[Any], Any], domain: Iterable[Any], target_set: set[Any]) -> set[Any]:
+    """Compute the preimage of a finite target set over a finite domain."""
+    return {x for x in domain if function(x) in target_set}
+
+
+# ---------------------------------------------------------------------------
+# Sections 9-10: Indicator functions and simple functions
+# ---------------------------------------------------------------------------
+
+def indicator(set_predicate: Predicate) -> Callable[[float], int]:
+    """Convert a set predicate into an indicator function."""
+    return lambda x: 1 if set_predicate(x) else 0
+
+
+def simple_function(terms: Sequence[tuple[float, Predicate]]) -> NumericFunction:
+    """Build a simple function from weighted indicator regions."""
+    def s(x: float) -> float:
+        return sum(coefficient for coefficient, predicate in terms if predicate(x))
+    return s
+
+
+# ---------------------------------------------------------------------------
+# Sections 11-13 and 25: Countability, rationals, Dirichlet intuition
+# ---------------------------------------------------------------------------
+
+def natural_numbers(limit: int) -> list[int]:
+    """Finite prefix of the natural numbers."""
+    return list(range(1, limit + 1))
+
+
+def integers_symmetric(limit: int) -> list[int]:
+    """Finite symmetric enumeration of integers: 0, 1, -1, 2, -2, ..."""
+    result = [0]
+    for n in range(1, limit + 1):
+        result.extend([n, -n])
+    return result
+
+
+def rationals_in_interval(a: float, b: float, max_denominator: int) -> list[Fraction]:
+    """Generate rational numbers in [a, b] up to a denominator bound."""
+    rationals: set[Fraction] = set()
+    for q in range(1, max_denominator + 1):
+        start = int(a * q) - 1
+        stop = int(b * q) + 2
+        for p in range(start, stop):
+            r = Fraction(p, q)
+            if a <= float(r) <= b:
+                rationals.add(r)
+    return sorted(rationals)
+
+
+def rational_indicator_approx(x: float, max_denominator: int = 1000, tolerance: float = 1e-12) -> int:
+    """Approximate rational membership. This is computational intuition only."""
+    r = Fraction(x).limit_denominator(max_denominator)
+    return 1 if abs(float(r) - x) < tolerance else 0
+
+
+# ---------------------------------------------------------------------------
+# Sections 15-18: Topological predicates and cover checks
+# ---------------------------------------------------------------------------
+
+def open_interval(a: float, b: float) -> Predicate:
+    """Predicate for an open interval."""
+    return lambda x: a < x < b
+
+
+def closed_interval(a: float, b: float) -> Predicate:
+    """Predicate for a closed interval."""
+    return lambda x: a <= x <= b
+
+
+def covered_by_intervals(points: Iterable[float], intervals: Sequence[tuple[float, float]]) -> bool:
+    """Check whether sampled points are covered by a finite interval collection."""
+    return all(any(a <= x <= b for a, b in intervals) for x in points)
+
+
+def near_set(x: float, points: Iterable[float], tolerance: float) -> bool:
+    """Approximate whether x is near a finite sampled set."""
+    return any(abs(x - point) < tolerance for point in points)
+
+
+# ---------------------------------------------------------------------------
+# Sections 19-23: Convergence, numerical integration, Riemann sums
+# ---------------------------------------------------------------------------
+
+def sequence_values(function_sequence: Callable[[int, float], float], x: float, n_values: Iterable[int]) -> list[float]:
+    """Evaluate f_n(x) over a finite list of n values."""
+    return [function_sequence(n, x) for n in n_values]
+
+
+def max_error_over_grid(function_sequence: Callable[[int, float], float], limit_function: NumericFunction, n: int, grid: Iterable[float]) -> float:
+    """Approximate uniform error over a finite grid."""
+    return max(abs(function_sequence(n, x) - limit_function(x)) for x in grid)
+
+
+def numerical_integral(function: NumericFunction, a: float, b: float, n: int = 10_000) -> float:
+    """Basic left-endpoint numerical integral."""
+    dx = (b - a) / n
+    return sum(function(a + i * dx) * dx for i in range(n))
+
+
+def spike_function(n: int) -> NumericFunction:
+    """Spike function with height n and width 1/n."""
+    return lambda x: n if 0 <= x <= 1 / n else 0
+
+
+def riemann_sum(function: NumericFunction, a: float, b: float, n: int) -> float:
+    """Basic Riemann sum."""
+    return numerical_integral(function, a, b, n)
+
+
+def upper_lower_sums(function: NumericFunction, a: float, b: float, n: int, samples_per_interval: int = 20) -> tuple[float, float]:
+    """Approximate Darboux lower and upper sums."""
+    dx = (b - a) / n
+    lower = 0.0
+    upper = 0.0
+    for i in range(n):
+        left = a + i * dx
+        right = left + dx
+        samples = [left + j * (right - left) / samples_per_interval for j in range(samples_per_interval + 1)]
+        values = [function(x) for x in samples]
+        lower += min(values) * dx
+        upper += max(values) * dx
+    return lower, upper
+
+
+def oscillation_near(function: NumericFunction, x: float, radius: float = 0.01, samples: int = 20) -> float:
+    """Approximate local oscillation near a point."""
+    points = [x - radius + 2 * radius * i / samples for i in range(samples + 1)]
+    values = [function(point) for point in points]
+    return max(values) - min(values)
+
+
+# ---------------------------------------------------------------------------
+# Sections 26-32: Cantor set, length, additivity, outer measure
+# ---------------------------------------------------------------------------
+
+def in_cantor_approx(x: float, iterations: int = 20) -> bool:
+    """Approximate membership in the Cantor set."""
+    if x < 0 or x > 1:
+        return False
+    for _ in range(iterations):
+        x *= 3
+        digit = int(x)
+        if digit == 1:
+            return False
+        x -= digit
+    return True
+
+
+def interval_length(a: float, b: float) -> float:
+    """Length of an interval, ignoring endpoint openness/closedness."""
+    return max(0.0, b - a)
+
+
+def total_interval_length(intervals: Sequence[tuple[float, float]]) -> float:
+    """Sum lengths of a finite list of intervals."""
+    return sum(interval_length(a, b) for a, b in intervals)
+
+
+def geometric_interval_lengths(n: int) -> list[float]:
+    """Finite prefix of 1/2 + 1/4 + 1/8 + ..."""
+    return [1 / (2 ** k) for k in range(1, n + 1)]
+
+
+def covers_points(points: Iterable[float], intervals: Sequence[tuple[float, float]]) -> bool:
+    """Check whether finite sampled points are covered by intervals."""
+    return covered_by_intervals(points, intervals)
+
+
+def interval_cover_length(intervals: Sequence[tuple[float, float]]) -> float:
+    """Total length of a finite interval cover."""
+    return total_interval_length(intervals)
+
+
+def toy_outer_measure(points: Sequence[float], epsilon: float) -> float:
+    """Toy outer-measure approximation for finite point clouds."""
+    intervals = [(x - epsilon, x + epsilon) for x in points]
+    return interval_cover_length(intervals)
+
+
+# ---------------------------------------------------------------------------
+# Sections 34-36: Measurable sets and finite sigma-algebras
+# ---------------------------------------------------------------------------
+
+def normalize_collection(collection: Iterable[Iterable[Any]]) -> set[frozenset[Any]]:
+    """Convert a collection of sets into a set of frozensets for comparison."""
+    return {frozenset(A) for A in collection}
+
+
+def is_measurable_finite(A: Iterable[Any], sigma_algebra: Iterable[Iterable[Any]]) -> bool:
+    """Check whether A belongs to a finite sigma-algebra representation."""
+    return frozenset(A) in normalize_collection(sigma_algebra)
+
+
+def is_sigma_algebra_finite(collection: Iterable[Iterable[Any]], universe: set[Any]) -> bool:
+    """Check finite sigma-algebra closure."""
+    normalized = normalize_collection(collection)
+    universe_frozen = frozenset(universe)
+    if frozenset() not in normalized:
+        return False
+    if universe_frozen not in normalized:
+        return False
+    for A in normalized:
+        if universe_frozen - A not in normalized:
+            return False
+    for A in normalized:
+        for B in normalized:
+            if A | B not in normalized:
+                return False
+            if A & B not in normalized:
+                return False
+    return True
+
+
+def generate_finite_sigma_algebra(generators: Iterable[Iterable[Any]], universe: set[Any]) -> list[set[Any]]:
+    """Generate the finite sigma-algebra created by finite generators."""
+    universe_frozen = frozenset(universe)
+    collection: set[frozenset[Any]] = {frozenset(), universe_frozen}
+    for generator in generators:
+        collection.add(frozenset(generator))
+    changed = True
+    while changed:
+        changed = False
+        new_collection = set(collection)
+        for A in collection:
+            new_collection.add(universe_frozen - A)
+        for A in collection:
+            for B in collection:
+                new_collection.add(A | B)
+                new_collection.add(A & B)
+        if len(new_collection) > len(collection):
+            collection = new_collection
+            changed = True
+    return [set(A) for A in sorted(collection, key=lambda S: (len(S), sorted(S)))]
+
+
+# ---------------------------------------------------------------------------
+# Sections 38-42: Level sets, approximate measure, indicator integration,
+# simple-function integration, measurable functions
+# ---------------------------------------------------------------------------
+
+def level_set(points: Iterable[float], function: NumericFunction, low: float, high: float) -> list[float]:
+    """Approximate a level set over sampled points."""
+    return [x for x in points if low <= function(x) < high]
+
+
+def approximate_measure(predicate: Predicate, a: float, b: float, n: int = 10_000) -> float:
+    """Approximate the measure of a set in [a, b] by uniform sampling."""
+    dx = (b - a) / n
+    return sum(1 for i in range(n) if predicate(a + i * dx)) * dx
+
+
+def integrate_indicator(predicate: Predicate, a: float, b: float, n: int = 10_000) -> float:
+    """Approximate ∫χ_A dμ over [a, b]."""
+    return approximate_measure(predicate, a, b, n)
+
+
+def integrate_simple_function(terms: Sequence[tuple[float, Predicate]], a: float, b: float, n: int = 10_000) -> float:
+    """Approximate the integral of a simple function: ∫s dμ = Σ a_i μ(A_i)."""
+    total = 0.0
+    for coefficient, predicate in terms:
+        total += coefficient * approximate_measure(predicate, a, b, n)
+    return total
+
+
+def threshold_set(points: Iterable[float], function: NumericFunction, threshold: float) -> list[float]:
+    """Approximate the threshold set {x : f(x) > threshold}."""
+    return [x for x in points if function(x) > threshold]
+
+
+# ---------------------------------------------------------------------------
+# Demonstration runner
+# ---------------------------------------------------------------------------
+
+def demo_membership_and_indicators() -> None:
+    """Demonstrate membership, indicators, and approximate measure."""
+    A = lambda x: in_interval(x, 0.25, 0.75, closed=True)
+    chi_A = indicator(A)
+    print("0.5 ∈ A:", is_member_by_predicate(0.5, A))
+    print("0.9 ∈ A:", is_member_by_predicate(0.9, A))
+    print("χ_A(0.5):", chi_A(0.5))
+    print("χ_A(0.9):", chi_A(0.9))
+    print("Approximate measure of A in [0, 1]:", approximate_measure(A, 0, 1))
+
+
+def demo_simple_function_integration() -> None:
+    """Demonstrate approximate integration of a simple function."""
+    A1 = lambda x: 0 <= x < 0.5
+    A2 = lambda x: 0.5 <= x <= 1
+    terms = [(2.0, A1), (5.0, A2)]
+    s = simple_function(terms)
+    print("s(0.25):", s(0.25))
+    print("s(0.75):", s(0.75))
+    print("Approximate ∫s dμ over [0, 1]:", integrate_simple_function(terms, 0, 1))
+
+
+def demo_finite_sigma_algebra() -> None:
+    """Demonstrate a finite sigma-algebra check and generator."""
+    universe = {1, 2, 3, 4}
+    generators = [{1, 2}]
+    generated = generate_finite_sigma_algebra(generators, universe)
+    print("Generated finite sigma-algebra:")
+    for item in generated:
+        print(item)
+    print("Is sigma-algebra:", is_sigma_algebra_finite(generated, universe))
+
+
+def demo_convergence_and_spikes() -> None:
+    """Demonstrate function sequence behavior and spike integrals."""
+    f_n = lambda n, x: x ** n
+    for x in [0.0, 0.5, 0.9, 1.0]:
+        print(f"x={x}:", sequence_values(f_n, x, range(1, 8)))
+    for n in [10, 100, 1000]:
+        print(f"Spike integral n={n}:", numerical_integral(spike_function(n), 0, 1))
+
+
+def demo_cantor_and_outer_measure() -> None:
+    """Demonstrate Cantor membership approximation and toy outer measure."""
+    for x in [0.0, 1 / 3, 0.5, 2 / 3, 1.0]:
+        print(f"x={x}, in Cantor approx:", in_cantor_approx(x))
+    points = [0.1, 0.5, 0.9]
+    for epsilon in [0.1, 0.01, 0.001]:
+        print(f"epsilon={epsilon}, toy outer measure:", toy_outer_measure(points, epsilon))
+
+
+if __name__ == "__main__":
+    print("\n--- Membership and Indicators ---")
+    demo_membership_and_indicators()
+    print("\n--- Simple Function Integration ---")
+    demo_simple_function_integration()
+    print("\n--- Finite Sigma-Algebra ---")
+    demo_finite_sigma_algebra()
+    print("\n--- Convergence and Spikes ---")
+    demo_convergence_and_spikes()
+    print("\n--- Cantor and Outer Measure ---")
+    demo_cantor_and_outer_measure()
+    print("\n--- Rational Approximation ---")
+    print("sqrt(2) approx:", rational_approximation(sqrt(2), 50))
