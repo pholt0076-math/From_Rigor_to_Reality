@@ -1,8 +1,9 @@
 ﻿# Measure Theory Bridge 0.01
-## Real Analysis Was Not Just Hard Calculus
+## Pointwise Convergence Is Not Uniform Convergence
 
 Status: drafted
-Role: Content post 1 of 42
+Role: Python companion document for Content Post 1 of 42
+LinkedIn companion to: **Real Analysis Was Not Just Hard Calculus**
 
 ## Code purpose
 
