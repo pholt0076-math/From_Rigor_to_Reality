@@ -147,7 +147,8 @@ print(f"Target epsilon: 0.01")
 print()
 
 for left, right, length, r in intervals[:10]:
-    print(f"q = {r:>5} covered by ({left:.6f}, {right:.6f}), length = {length:.8f}")
+    label = str(r).rjust(5)
+    print(f"q = {label} covered by ({left:.6f}, {right:.6f}), length = {length:.8f}")
 ```
 
 The important point is not the specific finite list.
