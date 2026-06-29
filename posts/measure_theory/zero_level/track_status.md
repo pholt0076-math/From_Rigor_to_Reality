@@ -14,7 +14,7 @@
 | 10 | Simple Functions: Building Functions from Sets | Part III | Planned | Yes | Simple function constructor |
 | 11 | Countable Infinity | Part IV | Planned | Yes | Finite prefixes of enumerations |
 | 12 | Countable Operations Are the Sweet Spot | Part IV | Planned | Yes | Truncated countable ops |
-| 13 | The Rationals Are Everywhere but Small | Part IV | Planned | Yes | Generate rationals in interval |
+| 13 | The Rationals Are Everywhere but Small | Part IV | Drafted / ready for publication check | Yes | Generate rationals in interval; code notes added |
 | 14 | The Real Numbers Are Too Large for Naive Measurement | Part IV | Planned | No | Conceptual |
 | 15 | Open Sets: Space With Breathing Room | Part V | Planned | Yes | Open interval predicate |
 | 16 | Closed Sets: Limits That Stay Inside | Part V | Planned | Yes | Closed interval predicate |
